@@ -63,6 +63,7 @@ def load_historic_ratings_and_prices(
         # Load historic stock prices for each company with a rating
         companies = list(ratings['Ticker'].unique())
         prices_from = ratings_from - timedelta(days=30)
+
         stock_prices = StockPricesAPI(tickers=companies, start_date=prices_from).stock_prices
 
         ratings = filter_ratings_without_stock_prices(ratings, stock_prices, performance_horizon)

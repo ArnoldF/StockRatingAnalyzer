@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 def perform_t_tests(
         performance_after_rating: dict[str, pd.DataFrame],
-        time_points: list[int] = [1, 2, 239]
+        time_points: list[int] = [1, 239]
 ) -> None:
     # Perform two-sample t-test between each pair of ratings categories
     rating_categories = list(performance_after_rating.keys())

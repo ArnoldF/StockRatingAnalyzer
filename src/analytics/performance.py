@@ -1,9 +1,9 @@
 from collections import defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
+import random
 from typing import Optional
 
 import pandas as pd
-import tqdm
 
 
 def get_performance_after(
@@ -70,6 +70,16 @@ def compute_performance_after_rating(
     return performances_after_rating
 
 
+def random_date_within_year(date, earliest_date: datetime):
+    year_start = datetime(date.year, 1, 1)
+    year_end = datetime(date.year + 1, 1, 1) - timedelta(days=1)
+    if earliest_date.year == year_start.year:
+        year_start= earliest_date
+
+    random_days = random.randint(0, (year_end - year_start).days)
+    return year_start + timedelta(days=random_days)
+
+
 def compute_performance_any_day(
         ratings: pd.DataFrame,
         stock_prices: dict[str, pd.DataFrame],
@@ -82,12 +92,11 @@ def compute_performance_any_day(
     ratings_per_company = ratings['Ticker'].value_counts().to_dict()
 
     for company, num_ratings in ratings_per_company.items():
-        start_interval = ratings.loc[ratings['Ticker'] == company, 'Date_datetime'].min()
-        end_interval = ratings.loc[ratings['Ticker'] == company, 'Date_datetime'].max()
-        prices = stock_prices[company]
+
+        first_stock_price = stock_prices[company]['Date'].min()
         random_dates = (
-            prices[(prices["Date"] >= start_interval) & (prices["Date"] <= end_interval)]
-            ["Date"].sample(n=num_ratings, random_state=42).to_list()
+            ratings[ratings['Ticker'] == company]['Date_datetime']
+            .apply(random_date_within_year, earliest_date=first_stock_price).tolist()
         )
 
         for random_date in random_dates:

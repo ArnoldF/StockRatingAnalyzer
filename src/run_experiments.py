@@ -14,9 +14,11 @@ FROM_YEAR = 2014
 TO_YEAR = 2024
 PERFORMANCE_HORIZON = 240
 
+
 def perform_experiment(ratings, stock_prices):
     # print some statistics about the ratings
     logger.info('Rating overview')
+    logger.info(f' Ratings by {len(list(ratings["Ticker"].unique()))} companies')
     logger.info(ratings['Rating_numeric'].value_counts())
     logger.info(ratings['Rater'].value_counts().head(10))
 
