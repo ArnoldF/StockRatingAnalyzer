@@ -10,6 +10,7 @@ But are these ratings truly a roadmap to profit, or just noise that is better ig
 Let us use the power of `Python`, `Pandas` and `Publicly available data` to perform a rigorous analysis. 
 
 Feel free to replicate the analysis, propose improvements, or extend the study to suit your trading strategy!
+Just run [src/run_experiments](src/run_experiments.py)
 
 ---
 
