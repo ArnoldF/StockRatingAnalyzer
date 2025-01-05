@@ -17,7 +17,6 @@ def get_performance_after(
         f'Cannot use rating with date {start_date}, stock price series start at {dataframe["Date"].iloc[0]}'
 
     # find the index of the row, in which the `Date` is just before `start_date`
-    dataframe['Date'].iloc[0] < start_date
     start_index = dataframe['Date'].searchsorted(start_date, side='left') - 1
     start_value = dataframe.iloc[start_index][value_col]
 
@@ -49,11 +48,11 @@ def get_mean_over_dataframes(dataframes: list[pd.DataFrame]) -> pd.DataFrame:
     return pd.DataFrame(averaged, columns=['mean'])
 
 
-def compute_performance_after_rating(
+def compute_performance_after_ratings(
         ratings: pd.DataFrame,
         stock_prices: dict[str, pd.DataFrame],
         performance_horizon: int
-) -> dict[str, pd.DataFrame]:
+) -> defaultdict[str, list[pd.DataFrame]]:
     # For each rating, compute the performance (in terms of change in stock price) for the next year
     # The baseline is the stock price of the day before the rating was published
     performances_after_rating = defaultdict(list)
@@ -74,7 +73,7 @@ def random_date_within_year(date, earliest_date: datetime):
     year_start = datetime(date.year, 1, 1)
     year_end = datetime(date.year + 1, 1, 1) - timedelta(days=1)
     if earliest_date.year == year_start.year:
-        year_start= earliest_date
+        year_start = earliest_date
 
     random_days = random.randint(0, (year_end - year_start).days)
     return year_start + timedelta(days=random_days)
@@ -86,13 +85,12 @@ def compute_performance_any_day(
         performance_horizon: int
 ) -> list[pd.DataFrame]:
     # Compute the performance starting from randomly selected days
-    # For each ticker, the number of computed performances equals number of existing ratings
+    # For each ticker, the number of random performances equals number of existing ratings
     # to consider the distribution of ratings across companies in the mean later
     performances_any_day = []
     ratings_per_company = ratings['Ticker'].value_counts().to_dict()
 
     for company, num_ratings in ratings_per_company.items():
-
         first_stock_price = stock_prices[company]['Date'].min()
         random_dates = (
             ratings[ratings['Ticker'] == company]['Date_datetime']
@@ -108,7 +106,7 @@ def compute_performance_any_day(
 
 
 def compute_mean_performance_after_rating(
-        performances_after_rating: dict[str, pd.DataFrame]
+        performances_after_rating: dict[str, list[pd.DataFrame]]
 ) -> dict[str, pd.DataFrame]:
     mean_performance_after_rating = {
         rating_text: get_mean_over_dataframes(performances)

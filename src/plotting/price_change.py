@@ -74,6 +74,7 @@ def plot_rating_distribution(ratings):
         color='crimson'
     )
 
+    # Formatting
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
     ax.spines['left'].set_linewidth(False)

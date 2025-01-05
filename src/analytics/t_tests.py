@@ -31,7 +31,7 @@ def perform_t_tests(
             ]
 
             # t-test to establish whether the two performance lists stem from two different groups
-            # Set equal_var=False for Welch’s t-test, since performances are largely indepdendent
+            # Set equal_var=False for Welch’s t-test, since performances can be assumed to be indepdendent
             t_stat, p_value = ttest_ind(performances1, performances2, equal_var=False)
             p_values.append(p_value)
             mean_diffs.append(statistics.mean(performances1) - statistics.mean(performances2))

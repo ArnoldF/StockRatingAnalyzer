@@ -3,7 +3,7 @@ import logging
 
 from src.api.data_loader import load_historic_ratings_and_prices
 from src.analytics.t_tests import perform_t_tests
-from src.analytics.performance import compute_performance_after_rating, compute_mean_performance_after_rating, \
+from src.analytics.performance import compute_performance_after_ratings, compute_mean_performance_after_rating, \
     compute_performance_any_day
 from src.plotting.price_change import plot_mean_performance
 
@@ -23,7 +23,7 @@ def perform_experiment(ratings, stock_prices):
     logger.info(ratings['Rater'].value_counts().head(10))
 
     # computation
-    performance_after_rating = compute_performance_after_rating(ratings, stock_prices, PERFORMANCE_HORIZON)
+    performance_after_rating = compute_performance_after_ratings(ratings, stock_prices, PERFORMANCE_HORIZON)
     performance_after_rating['any day'] = compute_performance_any_day(ratings, stock_prices, PERFORMANCE_HORIZON)
     mean_performance_after_rating = compute_mean_performance_after_rating(performance_after_rating)
 
